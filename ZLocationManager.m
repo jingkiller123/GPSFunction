@@ -104,7 +104,11 @@ static const CLLocationAccuracy kINTUHorizontalAccuracyThresholdCity =         5
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     self.locationManager.distanceFilter = kINTUHorizontalAccuracyThresholdCity;
     if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-        [self.locationManager requestAlwaysAuthorization];
+//        [self.locationManager requestAlwaysAuthorization];
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    else if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
     }
 }
 
@@ -163,7 +167,9 @@ static const CLLocationAccuracy kINTUHorizontalAccuracyThresholdCity =         5
                     city = placeMark.administrativeArea;
                 }
                 
-                strongSelf.ReverseGeocoding(city);
+                if (strongSelf.ReverseGeocoding) {
+                    strongSelf.ReverseGeocoding(city);
+                }
             }
             else {
             
@@ -283,7 +289,9 @@ static const CLLocationAccuracy kINTUHorizontalAccuracyThresholdCity =         5
             [self closeGPS];
         }
         
-        self.GPSAuthError(GPSAuthorizationUnknown);
+        if (self.GPSAuthError) {
+            self.GPSAuthError(GPSAuthorizationUnknown);
+        }
     }
     
 }
@@ -332,7 +340,10 @@ static const CLLocationAccuracy kINTUHorizontalAccuracyThresholdCity =         5
     else {
     
         NSLog(@"GPS错误回调异常");
-        self.GPSAuthError(GPSAuthorizationUnknown);
+        
+        if (self.GPSAuthError) {
+            self.GPSAuthError(GPSAuthorizationUnknown);
+        }
     }
     
 }
